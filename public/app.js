@@ -70,6 +70,9 @@ function renderResult(data) {
   $('resDuration').textContent = data.duration || '–';
   $('resDurationWrap').style.display = data.duration ? '' : 'none';
   $('demoBadge').hidden = !data.demo;
+  $('playerCaption').textContent = data.demo
+    ? 'Pratinjau di atas adalah hasil contoh — tempel tautan TikTok untuk melihat hasil aslinya.'
+    : 'Hasil dari tautanmu — klik tombol di atas untuk menyimpan filenya.';
 
   // Media
   playerMedia.innerHTML = '';

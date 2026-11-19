@@ -12,6 +12,10 @@ Tempel tautan TikTok, unduh videonya tanpa watermark, audionya sebagai MP3, atau
 
 ![Landing mobile](docs/screenshots/landing-mobile.png)
 
+Hasil asli dari tautan TikTok nyata (play-test live):
+
+![Hasil asli live](docs/screenshots/live-hasil-asli.png)
+
 Video demo: [docs/demo/demo.mp4](docs/demo/demo.mp4)
 
 ## Fitur

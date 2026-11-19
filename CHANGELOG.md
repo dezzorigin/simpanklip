@@ -49,6 +49,13 @@ Restructure kedua di program P1 (setelah #33 lokakos) + rebuild total.
   (diambil via curl POST dari VM), diperbaiki (decoder `&#34;` + statistik
   dipersempit ke span `.text-secondary`), dibuktikan parse HTML asli:
   6 URL nowm, 3 wm, 1 mp3. Fixture unit test diperbarui ke markup asli.
+- **Play-test live tautan asli (commit ke-3 PR #1):** `/api/download`
+  untuk `@official.account8830/video/7692726307108556063` → 200, 6 nowm,
+  3 wm, 1 mp3, statistik asli; file terverifikasi: video `206 video/mp4`
+  (`ftypisom`), audio `206 audio/mpeg`; headless play-test live menampilkan
+  pratinjau + ketiga tombol unduh (`docs/screenshots/live-hasil-asli.png`).
+  Perbaikan kecil: caption bawah pemutar kini berganti teks untuk hasil
+  asli (sebelumnya selalu berbunyi "hasil contoh").
 
 ## [1.0.0] — 2026 — awal
 
