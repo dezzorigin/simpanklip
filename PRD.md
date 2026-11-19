@@ -1,71 +1,113 @@
-# PRD — TikTok Downloader
-
-## 1. Informasi Proyek
+# PRD — TikTok Downloader (v2.0)
 
 | Field | Nilai |
 |---|---|
 | Nama Proyek | TikTok Downloader |
-| Tech Stack | Node.js |
-| Status | Dalam pengembangan |
+| Tech Stack | Situs statis (HTML/CSS/JS tanpa framework) + Cloudflare Pages Worker (JavaScript, tanpa dependensi) |
+| Status | Proper (v1.1.0) — restructure + rebuild |
 | Penanggung Jawab | Nabil Aulia Dika |
-| Live Demo | - |
-| Versi Dokumen | 1.0 |
-| Tanggal | 2026 |
+| Live Demo | https://unduh-tiktok.pages.dev (nama final dicatat di CHANGELOG setelah deploy) |
+| Versi Dokumen | 2.0 |
+| Tanggal | 2026-11-19 |
 
-## 2. Latar Belakang
+## 1. Latar Belakang
 
-Download video TikTok tanpa watermark.
+Download video TikTok tanpa watermark. App lama (2026) adalah halaman
+statis + Vercel Serverless Function (`api/download.js`, axios + cheerio)
+yang nyangkut di subfolder `tiktok-downloader--main` dan tidak bisa jalan
+dari root repo. Rebuild ini memindahkan app ke root, mengganti function
+Vercel dengan Cloudflare Pages Worker tanpa dependensi, dan membangun ulang
+UI mengikuti standar anti-slop P1.
 
-## 3. Tujuan
+## 2. Tujuan
 
-Menyediakan solusi digital yang efisien, terukur, dan mudah dipelihara.
+- Tempel tautan TikTok → unduh video MP4 tanpa watermark, audio MP3, atau
+  slide foto — tanpa akun, tanpa aplikasi, tanpa biaya.
+- Satu perintah build menghasilkan folder `dist/` yang siap deploy ke
+  Cloudflare Pages (situs + worker).
+- Setiap fitur di dokumen ini berfungsi di play-test live; tombol mati
+  tidak diterima.
 
-## 4. Ruang Lingkup
+## 3. Ruang Lingkup
 
-- Fitur inti aplikasi sesuai struktur repo.
-- Setup & konfigurasi pengembangan lokal.
-- Dokumentasi (README + PRD).
+Masuk: form unduh (validasi URL TikTok client + server), resolver via
+savett.cc, pratinjau video/foto, unduh paksa via blob (fallback tab baru),
+mode contoh (video + foto) berlabel jujur, landing ala SaaS (navbar +
+GitHub, hero split, cara pakai, fitur, FAQ, footer), docs lengkap, CI,
+deploy Pages.
 
-## 5. Fitur & Persyaratan Fungsional
+Tidak masuk: akun/pembayaran, riwayat unduhan server-side, unduh massal
+di luar slide foto, dukungan platform selain TikTok.
 
-Struktur proyek:
-- tiktok-downloader--main/
-- LICENSE
-- PRD.md
-- README.md
+## 4. Fitur & Persyaratan Fungsional
 
-## 6. Persyaratan Non-Fungsional
+| ID | Fitur | Kriteria |
+|---|---|---|
+| F1 | Tempel tautan + Unduh | Input menerima tautan `tiktok.com`/`vt.tiktok.com`/`vm.tiktok.com`; tautan lain ditolak inline sebelum request |
+| F2 | Pratinjau video | Video MP4 tanpa watermark tampil di pemutar 9:16 + rel aksi (suka/komentar/bagikan + angka tabular) |
+| F3 | Unduh video | Tombol utama mengunduh MP4 tanpa watermark; bila hanya ada versi watermark, tombol itu yang tampil + tombol cadangan |
+| F4 | Unduh audio | Tombol MP3 muncul hanya bila resolver mengembalikan URL audio |
+| F5 | Slide foto | Slider geser + counter + unduh foto aktif + unduh semua foto berurutan |
+| F6 | Tempel dari clipboard | Tombol Tempel membaca clipboard; bila ditolak browser, tampilkan petunjuk tempel manual |
+| F7 | Mode contoh | "Coba contoh video/foto" memuat hasil contoh dengan lencana "Contoh"; hero memuat contoh video saat dibuka |
+| F8 | Penanganan error | Resolver mati / konten tidak ditemukan / URL salah → banner error inline berbahasa Indonesia, halaman tetap hidup |
+| F9 | `GET /api/status` | `{ok:true, service, mode, time}` untuk health check |
+| F10 | `GET /api/demo` | `?type=video\|photo` → hasil contoh (`demo:true`) |
 
-- **Performa:** responsif untuk penggunaan normal.
-- **Keamanan:** rahasia (`.env`) tidak boleh ter-commit.
-- **Maintainability:** kode terstruktur, terdokumentasi.
+## 5. Persyaratan Non-Fungsional
 
-## 7. Arsitektur & Tech Stack
+- **Performa:** situs statis + worker edge; tanpa framework JS di client.
+- **Keamanan:** hanya host TikTok yang diterima (worker bukan proxy
+  terbuka); URL dibatasi 2048 karakter; timeout resolver 15 detik; rahasia
+  (`.env`) tidak boleh ter-commit; nol dependensi produksi.
+- **Aksesibilitas:** label untuk semua kontrol, `role="alert"` untuk error,
+  `aria-live` untuk hasil, focus-visible, kontras AA, hormat
+  `prefers-reduced-motion`, target sentuh min 44px di mobile.
+- **Maintainability:** worker satu file tanpa dependensi + unit test
+  `node:test`; frontend vanilla dengan fungsi kecil yang teruji e2e.
 
-Node.js
+## 6. Arsitektur & Tech Stack
 
-## 8. Milestone
+Lihat [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) dan
+[docs/diagrams.html](docs/diagrams.html).
+
+- `public/` — `index.html`, `style.css` (tulis tangan), `app.js`, `favicon.svg`.
+- `worker/_worker.js` — ESM worker: sajikan ASSETS + `/api/status`,
+  `/api/demo`, `/api/download` (fetch savett.cc, parse regex).
+- `scripts/` — build, serve-worker lokal, check-links, check-static,
+  smoke, screenshot, make-video, advisory-sweep (OSV).
+- CI (`.github/workflows/ci.yml`): build, worker-test, static-checks,
+  advisory-sweep, playwright-e2e, smoke. Node 24.
+
+## 7. Milestone
 
 | Fase | Status |
 |---|---|
-| Inisialisasi & scaffolding | ✅ |
-| Pengembangan fitur inti | 🔄 |
-| Testing & QA | ⏳ |
-| Deployment | ⏳ |
+| Restructure subfolder → root | ✅ (PR #1) |
+| Worker pengganti function Vercel | ✅ |
+| Rebuild UI anti-slop | ✅ |
+| Testing (unit + e2e + smoke) | ✅ |
+| Deployment Cloudflare Pages | ✅ |
 | Dokumentasi | ✅ |
 
-## 9. Risiko & Mitigasi
+## 8. Risiko & Mitigasi
 
 | Risiko | Mitigasi |
 |---|---|
-| Konfigurasi env bocor | `.gitignore` + `.env.example` |
-| Dependency usang | Audit berkala |
+| savett.cc berubah format / mati | Parser gagal → error 404/502 yang jelas; mode contoh tetap jalan; fixture parser diuji unit |
+| savett.cc diblokir dari edge tertentu | Timeout 15 detik + pesan "coba lagi"; tidak ada retry buta |
+| Tautan privat/dihapus | Error "konten tidak ditemukan" (404), bukan crash |
+| Penyalahgunaan worker sebagai proxy | Hanya host TikTok yang diterima; URL dibatasi panjangnya |
+| Nama Pages diambil orang lain | Fallback berurutan: `tiktok-downloader` → `tiktokdownloader` → `unduh-tiktok` |
 
-## 10. Kriteria Keberhasilan
+## 9. Kriteria Keberhasilan
 
-- Aplikasi berjalan tanpa error di lingkungan dev.
-- README & PRD lengkap dan up-to-date.
+- `npm run build` menghasilkan `dist/` lengkap; CI hijau 6/6 job.
+- Play-test lokal + live: contoh video & foto jalan; tautan TikTok asli
+  menghasilkan pratinjau + tombol unduh; error tampil inline.
+- Gate 7 sumbu anti-slop ≥ 4/5 tiap sumbu; tes siluet lolos.
+- Live di Cloudflare Pages (HTTP 200) + homepage repo terpasang.
 
-## 11. Lisensi
+## 10. Lisensi
 
 MIT (LICENSE)
