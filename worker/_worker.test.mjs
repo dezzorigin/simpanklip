@@ -38,10 +38,13 @@ test('parseSavettHtml: video — username, statistik, durasi, tiga format', () =
   assert.equal(d.comments, '1.234');
   assert.equal(d.shares, '5.678');
   assert.equal(d.duration, '00:24');
-  assert.deepEqual(d.downloads.nowm, ['https://cdn.contoh/video-nowm.mp4']);
+  assert.deepEqual(d.downloads.nowm, ['https://cdn.contoh/video-nowm.mp4', 'https://cdn.contoh/video-nowm-hd.mp4']);
   assert.deepEqual(d.downloads.wm, ['https://cdn.contoh/video-wm.mp4']);
   assert.deepEqual(d.mp3, ['https://cdn.contoh/audio.mp3']);
   assert.deepEqual(d.slides, []);
+  // Profile Picture + Thumbnail/Cover sengaja diabaikan (bukan produk).
+  assert.equal(JSON.stringify(d).includes('cdn.contoh/avatar.jpg'), false);
+  assert.equal(JSON.stringify(d).includes('cdn.contoh/cover.jpg'), false);
 });
 
 test('parseSavettHtml: foto — tiga slide, type photo', () => {

@@ -38,9 +38,17 @@ Restructure kedua di program P1 (setelah #33 lokakos) + rebuild total.
 
 ### Deploy
 
-- Cloudflare Pages: `https://tiktok-downloader.pages.dev` (nama final
-  dicatat setelah create-project; fallback `tiktokdownloader` →
-  `unduh-tiktok`).
+- Cloudflare Pages: `https://unduh-tiktok.pages.dev`. Nama `tiktok-downloader`
+  HTTP 409 (dipakai akun Cloudflare lain); `tiktokdownloader` jadi
+  bersufiks (`tiktokdownloader-2ki.pages.dev`, proyek dihapus lagi);
+  `unduh-tiktok` bersih.
+- **Perbaikan parser pasca-deploy pertama (commit ke-2 PR #1):** nilai
+  `<option>` savett memakai entitas `&#34;` (bukan `&quot;`) sehingga
+  `JSON.parse` gagal dan semua URL unduhan kosong — padahal resolver
+  merespons 200 dengan statistik asli. Ditemukan lewat HTML savett asli
+  (diambil via curl POST dari VM), diperbaiki (decoder `&#34;` + statistik
+  dipersempit ke span `.text-secondary`), dibuktikan parse HTML asli:
+  6 URL nowm, 3 wm, 1 mp3. Fixture unit test diperbarui ke markup asli.
 
 ## [1.0.0] — 2026 — awal
 

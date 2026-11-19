@@ -6,7 +6,7 @@
 | Tech Stack | Situs statis (HTML/CSS/JS tanpa framework) + Cloudflare Pages Worker (JavaScript, tanpa dependensi) |
 | Status | Proper (v1.1.0) — restructure + rebuild |
 | Penanggung Jawab | Nabil Aulia Dika |
-| Live Demo | https://tiktok-downloader.pages.dev (nama final dicatat di CHANGELOG setelah deploy) |
+| Live Demo | https://unduh-tiktok.pages.dev (nama final dicatat di CHANGELOG setelah deploy) |
 | Versi Dokumen | 2.0 |
 | Tanggal | 2026-11-19 |
 

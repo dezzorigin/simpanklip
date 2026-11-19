@@ -50,8 +50,9 @@ export function isTikTokUrl(raw) {
 
 function decodeEntities(s) {
   return s
-    .replace(/&quot;/g, '"')
+    .replace(/&#34;|&#x22;/g, '"')
     .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>');
@@ -81,7 +82,14 @@ export function parseSavettHtml(html) {
     throw err;
   }
 
-  const stats = [...region.matchAll(/<span[^>]*>([^<]*)<\/span>/g)].map((m) => m[1].trim());
+  // Statistik: 5 span .text-secondary di blok .my-1 — urutan tetap:
+  // views, likes, saves, comments, shares (mapping warisan kode lama).
+  // Dipersempit ke class itu supaya span lain ("Format", "&sdot;") tidak
+  // ikut terambil; fallback ke semua span bila markup berubah lagi.
+  let stats = [...region.matchAll(/<span class="text-secondary[^"]*">([^<]*)<\/span>/g)].map((m) => m[1].trim());
+  if (stats.length < 5) {
+    stats = [...region.matchAll(/<span[^>]*>([^<]*)<\/span>/g)].map((m) => m[1].trim());
+  }
   const duration =
     region.match(/Duration:\s*([^<]+)/i)?.[1].trim() || null;
 
@@ -129,6 +137,9 @@ export function parseSavettHtml(html) {
     }
     if (!json || !json.URL) continue;
     const urls = Array.isArray(json.URL) ? json.URL : [json.URL];
+    // Label asli savett (2026-11-19): "MP4", "MP4HD", "MP4 Watermark",
+    // "MP3", "Profile Picture", "Thumbnail/Cover". Hanya tiga pertama yang
+    // relevan dengan produk (video/mp3); sisanya diabaikan.
     // PERBAIKAN dari logika lama: label "MP4 No Watermark" mengandung kata
     // "watermark", jadi cek lama (mp4 && !watermark) salah menggolongkannya
     // ke wm. Urutan cek: "no watermark" dulu, baru "watermark".

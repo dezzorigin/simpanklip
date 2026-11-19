@@ -74,11 +74,15 @@ dist/             # hasil build (diabaikan git) — yang di-deploy
 2. `GET https://savett.cc/en1/download` → ambil `csrf_token` + cookie sesi.
 3. `POST` ke URL yang sama dengan `csrf_token` + `url` (form-urlencoded).
 4. Parse HTML hasil dengan regex (tanpa cheerio):
-   - `#video-info h3` → username; `.my-1 span` → statistik;
-     `Duration:` → durasi.
-   - `#formatselect option` → JSON `{URL:[…]}` per label; klasifikasi
-     MP4 tanpa watermark / watermark / MP3. **Perbaikan dari kode lama:**
-     label "No Watermark" dicek dulu sebelum "Watermark".
+   - `#video-info h3` → username; 5 span `.text-secondary` di `.my-1` →
+     statistik (views, likes, saves, comments, shares); `Duration:` →
+     durasi. Statistik dipersempit ke class itu supaya span lain
+     ("Format", `&sdot;`) tidak ikut terambil.
+   - `#formatselect option` → JSON `{URL:[…]}` per label; nilai memakai
+     entitas `&#34;` (bukan `&quot;`) — decoder menanganinya. Label asli:
+     `MP4`/`MP4HD` → nowm, `MP4 Watermark` → wm, `MP3` → mp3;
+     `Profile Picture`/`Thumbnail/Cover` diabaikan. Klasifikasi
+     "no watermark" dicek dulu sebelum "watermark".
    - `.carousel-item[data-data]` → slide foto (JSON `{URL:[…]}`).
 5. Timeout 15 detik (`AbortSignal.timeout`); semua kegagalan fetch
    dipetakan ke `RESOLVER_DOWN`.
