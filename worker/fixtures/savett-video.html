@@ -1,0 +1,21 @@
+<!doctype html>
+<html><head><title>SaveTT</title></head><body>
+<form action="/en1/download" method="post">
+  <input type="hidden" name="csrf_token" value="csrf-contoh-123">
+  <input name="url">
+</form>
+<div id="video-info">
+  <h3>contoh_kreator</h3>
+  <div class="my-1"><span>1.234.567</span></div>
+  <div class="my-1"><span>89.012</span></div>
+  <div class="my-1"><span>3.210</span></div>
+  <div class="my-1"><span>1.234</span></div>
+  <div class="my-1"><span>5.678</span></div>
+  <p class="text-muted">Duration: 00:24</p>
+</div>
+<select id="formatselect">
+  <option value="{&quot;URL&quot;: [&quot;https://cdn.contoh/video-nowm.mp4&quot;]}">MP4 No Watermark HD</option>
+  <option value="{&quot;URL&quot;: [&quot;https://cdn.contoh/video-wm.mp4&quot;]}">MP4 Watermark</option>
+  <option value="{&quot;URL&quot;: [&quot;https://cdn.contoh/audio.mp3&quot;]}">MP3 Audio</option>
+</select>
+</body></html>

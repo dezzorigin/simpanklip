@@ -1,0 +1,328 @@
+/* TikTok Downloader — gaya tulis tangan (tanpa framework).
+   Palet (docs/DESIGN.md): Panggung Hitam, Layar Arang, Merah TikTok,
+   Cyan TikTok, Kertas Putih, Abu Sinyal. Font: Sora (display) + Figtree. */
+:root {
+  --panggung: #0e0e10;
+  --layar: #17171a;
+  --layar-2: #1f1f23;
+  --garis: #2a2a2e;
+  --merah: #fe2c55;
+  --merah-hover: #e01e46;
+  --cyan: #25f4ee;
+  --kertas: #f4f4f2;
+  --abu: #9a9aa3;
+  --abu-gelap: #6e6e76;
+  --radius-kartu: 12px;
+  --radius-input: 10px;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--panggung);
+  color: var(--kertas);
+  font-family: "Figtree", "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .brand-name, .step-num, .rail-item span, .player-user {
+  font-family: "Sora", "Figtree", sans-serif;
+}
+
+h1 {
+  font-size: clamp(2.1rem, 4.5vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: 12px 0 16px;
+  font-weight: 800;
+  max-width: 16ch;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin: 0 0 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+a { color: var(--cyan); }
+a:hover { color: var(--kertas); }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+/* ——— Navbar ——— */
+.navbar { border-bottom: 1px solid var(--garis); }
+.navbar-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 64px; gap: 16px;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--kertas); text-decoration: none;
+}
+.brand-mark {
+  display: grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--merah); color: #fff;
+}
+.brand-name { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-links a {
+  color: var(--abu); text-decoration: none;
+  padding: 8px 12px; border-radius: 8px; font-weight: 500;
+}
+.nav-links a:hover { color: var(--kertas); background: var(--layar); }
+.nav-links a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.github-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--garis); color: var(--kertas) !important;
+}
+.github-link:hover { border-color: var(--abu); }
+
+/* ——— Hero ——— */
+.hero { padding: 64px 0 72px; }
+.hero-grid {
+  display: grid; grid-template-columns: 1.05fr 0.95fr;
+  gap: 56px; align-items: start;
+}
+.eyebrow {
+  margin: 0; color: var(--cyan);
+  font-weight: 600; font-size: 0.95rem; letter-spacing: 0.01em;
+}
+.lede { color: var(--abu); font-size: 1.08rem; max-width: 52ch; margin: 0 0 28px; }
+
+.dl-form { max-width: 560px; }
+.input-row {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--layar); border: 1px solid var(--garis);
+  border-radius: var(--radius-input); padding: 6px 6px 6px 14px;
+}
+.input-row:focus-within { border-color: var(--cyan); }
+.input-icon { color: var(--abu); display: grid; place-items: center; flex: none; }
+#urlInput {
+  flex: 1; min-width: 0; background: transparent; border: 0; outline: 0;
+  color: var(--kertas); font: inherit; font-size: 1rem; padding: 10px 0;
+}
+#urlInput::placeholder { color: var(--abu-gelap); }
+.paste-btn {
+  flex: none; display: inline-flex; align-items: center; gap: 6px;
+  background: var(--layar-2); color: var(--kertas);
+  border: 1px solid var(--garis); border-radius: 8px;
+  padding: 9px 12px; font: inherit; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; min-height: 44px;
+  transition: background 120ms ease-out, transform 100ms ease-out;
+}
+.paste-btn:hover { background: #26262b; }
+.paste-btn:active { transform: scale(0.97); }
+
+.cta {
+  width: 100%; margin-top: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--merah); color: #fff; border: 0; border-radius: 999px;
+  padding: 15px 24px; font: inherit; font-size: 1.05rem; font-weight: 700;
+  cursor: pointer; min-height: 52px;
+  transition: background 120ms ease-out, transform 100ms ease-out;
+}
+.cta:hover:not(:disabled) { background: var(--merah-hover); }
+.cta:active:not(:disabled) { transform: scale(0.97); }
+.cta:disabled { opacity: 0.65; cursor: wait; }
+.cta:focus-visible, .paste-btn:focus-visible, .text-btn:focus-visible,
+.dl-primary:focus-visible, .dl-secondary:focus-visible,
+.slider-bar button:focus-visible {
+  outline: 2px solid var(--cyan); outline-offset: 2px;
+}
+.cta .spinner {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35); border-top-color: #fff;
+  animation: spin 700ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.form-note { color: var(--abu); font-size: 0.9rem; margin: 14px 0 6px; max-width: 60ch; }
+.demo-links { color: var(--abu); font-size: 0.95rem; margin: 0; }
+.text-btn {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--cyan); font: inherit; text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.text-btn:hover { color: var(--kertas); }
+
+.error-box {
+  margin-top: 16px; padding: 12px 16px;
+  background: #2a1218; border: 1px solid #5c1f2b; border-radius: var(--radius-input);
+  color: #ffb3c0; font-size: 0.95rem;
+}
+
+/* ——— Pemutar (bingkai ponsel 9:16 + rel aksi) ——— */
+.hero-player { position: sticky; top: 24px; }
+.phone {
+  max-width: 340px; margin: 0 auto;
+  background: var(--layar); border: 1px solid var(--garis);
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+.phone-topbar {
+  display: flex; gap: 6px; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--garis);
+}
+.phone-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--garis); }
+.phone-dot:first-child { background: var(--merah); }
+.player { position: relative; aspect-ratio: 9 / 13.5; background: #000; }
+.player-media { position: absolute; inset: 0; width: 100%; height: 100%; }
+.player-media > video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; background: #000;
+}
+.player-media .slider-track img { object-fit: cover; }
+.player-media .slider-track {
+  display: flex; height: 100%;
+  transition: transform 180ms ease-out;
+}
+.player-media .slider-track img { flex: 0 0 100%; min-width: 100%; }
+.player-empty {
+  display: grid; place-items: center; height: 100%;
+  color: var(--abu); font-size: 0.95rem; padding: 24px; text-align: center;
+}
+.action-rail {
+  position: absolute; right: 10px; bottom: 76px;
+  display: flex; flex-direction: column; gap: 18px; align-items: center;
+  z-index: 2;
+}
+.rail-item {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  color: #fff; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+.rail-item span {
+  font-size: 0.8rem; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.player-meta {
+  position: absolute; left: 14px; right: 76px; bottom: 12px; z-index: 2;
+  color: #fff; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+/* Video memakai kontrol native (~40px di bawah) — meta naik supaya tidak
+   tertutup bar kontrol. Foto tidak punya bar kontrol, meta tetap di bawah. */
+.player.has-video .player-meta { bottom: 52px; }
+.player-user { margin: 0; font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.demo-badge {
+  font-family: "Figtree", sans-serif; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  background: var(--cyan); color: #062a28;
+  padding: 2px 8px; border-radius: 999px; text-shadow: none;
+}
+.player-stats { margin: 2px 0 0; font-size: 0.88rem; color: rgba(255, 255, 255, 0.85); font-variant-numeric: tabular-nums; }
+
+.slider-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; border-top: 1px solid var(--garis);
+  font-variant-numeric: tabular-nums; font-weight: 600;
+}
+.slider-bar button {
+  background: transparent; border: 1px solid var(--garis); color: var(--kertas);
+  border-radius: 8px; width: 44px; height: 44px;
+  display: grid; place-items: center; cursor: pointer;
+  transition: background 120ms ease-out, transform 100ms ease-out;
+}
+.slider-bar button:hover { background: var(--layar-2); }
+.slider-bar button:active { transform: scale(0.97); }
+
+.download-bar { max-width: 340px; margin: 16px auto 0; }
+.dl-primary {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--merah); color: #fff; border: 0; border-radius: 999px;
+  padding: 13px 20px; font: inherit; font-weight: 700; font-size: 0.98rem;
+  cursor: pointer; min-height: 48px;
+  transition: background 120ms ease-out, transform 100ms ease-out;
+}
+.dl-primary:hover { background: var(--merah-hover); }
+.dl-primary:active { transform: scale(0.97); }
+.dl-secondary-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.dl-secondary {
+  flex: 1 1 auto; background: transparent; color: var(--kertas);
+  border: 1px solid var(--garis); border-radius: 999px;
+  padding: 10px 14px; font: inherit; font-size: 0.92rem; font-weight: 600;
+  cursor: pointer; min-height: 44px;
+  transition: background 120ms ease-out, transform 100ms ease-out;
+}
+.dl-secondary:hover { background: var(--layar); }
+.dl-secondary:active { transform: scale(0.97); }
+.player-caption { color: var(--abu); font-size: 0.88rem; text-align: center; max-width: 340px; margin: 12px auto 0; }
+
+/* ——— Cara pakai ——— */
+.how { padding: 8px 0 64px; }
+.how-list {
+  list-style: none; margin: 0; padding: 28px 0 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  border-top: 1px solid var(--garis);
+}
+.how-list li { display: flex; gap: 14px; align-items: flex-start; }
+.step-num {
+  flex: none; width: 36px; height: 36px; border-radius: 50%;
+  background: var(--merah); color: #fff;
+  display: grid; place-items: center; font-weight: 700; font-size: 1rem;
+}
+.how-list h3 { margin: 4px 0 4px; font-size: 1.05rem; }
+.how-list p { margin: 0; color: var(--abu); font-size: 0.95rem; }
+
+/* ——— Fitur ——— */
+.features { padding: 0 0 64px; }
+.feature-list { margin: 0; border-top: 1px solid var(--garis); }
+.feature-row {
+  display: grid; grid-template-columns: minmax(220px, 0.9fr) 1.4fr;
+  gap: 24px; align-items: baseline;
+  padding: 20px 0; border-bottom: 1px solid var(--garis);
+}
+.feature-row dt {
+  display: flex; align-items: center; gap: 12px;
+  font-family: "Sora", sans-serif; font-weight: 700; font-size: 1.05rem;
+}
+.feature-icon { color: var(--cyan); display: grid; place-items: center; flex: none; }
+.feature-row dd { margin: 0; color: var(--abu); }
+
+/* ——— FAQ ——— */
+.faq { padding: 0 0 72px; }
+.faq .wrap { max-width: 760px; }
+.faq details {
+  border: 1px solid var(--garis); border-radius: var(--radius-kartu);
+  padding: 16px 20px; margin-bottom: 12px; background: var(--layar);
+}
+.faq summary { cursor: pointer; font-weight: 600; font-size: 1.02rem; }
+.faq summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.faq details p { margin: 10px 0 0; color: var(--abu); }
+
+/* ——— Footer ——— */
+.footer { border-top: 1px solid var(--garis); padding: 28px 0 36px; }
+.footer-inner {
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  color: var(--abu); font-size: 0.92rem;
+}
+.footer-inner p { margin: 0; }
+.footer-inner a { color: var(--abu); }
+.footer-inner a:hover { color: var(--kertas); }
+
+/* ——— Mobile ——— */
+@media (max-width: 860px) {
+  .hero { padding: 40px 0 56px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero-player { position: static; }
+  .how-list { grid-template-columns: 1fr; gap: 20px; }
+  .feature-row { grid-template-columns: 1fr; gap: 6px; }
+  .nav-links a:not(.github-link) { display: none; }
+  .github-link span { display: none; }
+  .github-link { padding: 8px 10px; }
+}
