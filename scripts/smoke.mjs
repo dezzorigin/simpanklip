@@ -47,7 +47,7 @@ try {
   if (!ok) throw new Error('server tidak naik di :' + PORT);
 
   const checks = [
-    ['/', 200, 'Unduh Video'],
+    ['/', 200, 'Simpan Klip'],
     ['/api/status', 200, '"ok":true'],
     ['/api/demo?type=video', 200, '"demo":true'],
     ['/api/demo?type=photo', 200, '"type":"photo"'],

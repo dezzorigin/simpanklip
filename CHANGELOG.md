@@ -1,14 +1,17 @@
-# CHANGELOG — Unduh Video
+# CHANGELOG — Simpan Klip
 
 ## [1.2.0] — 2026-11-20 — rebrand darurat (komplain merek dagang Cloudflare)
 
 Cloudflare Trust & Safety meminta penghapusan konten bermerek TikTok dari
 `unduh-tiktok.pages.dev` dalam 48 jam (tenggat 22 Nov 2026 05:23 WIB).
-Situs di-rebrand total menjadi "Unduh Video" dan pindah ke
-`https://unduh-video.pages.dev`; proyek Pages lama dihapus setelah
-verifikasi live.
+Situs di-rebrand total menjadi "Simpan Klip" dan pindah ke
+`https://simpanklip.pages.dev`; proyek Pages lama dihapus setelah
+verifikasi live. (Nama pertama yang dicoba, `unduh-video`, gagal:
+subdomain `unduh-video.pages.dev` sudah dipakai akun Cloudflare lain,
+proyek di akun ini jadi `unduh-video-2gw.pages.dev` — proyek itu dibuat
+lalu dihapus, nama final `simpanklip`.)
 
-- Brand "TikTok Downloader" -> "Unduh Video" di semua copy pengguna
+- Brand "TikTok Downloader" -> "Simpan Klip" di semua copy pengguna
   (title, hero, cara pakai, fitur, FAQ, footer, README, docs, OG tags)
   + `og-image.png` digambar ulang tanpa nama/logo TikTok.
 - Validasi host pindah ke server saja (worker): frontend tidak lagi
@@ -16,8 +19,9 @@ verifikasi live.
 - Worker tetap hanya me-resolve tautan video dari host yang didukung
   (allowlist server-side di `worker/_worker.js`); resolver savett.cc
   tidak berubah. Fungsi unduh tetap jalan; batas ini dicatat jujur.
-- Nama baru: proyek Pages `unduh-video`; repo GitHub ikut di-rename
-  `dezzorigin/tiktok-downloader` -> `dezzorigin/unduh-video`.
+- Nama baru: proyek Pages `simpanklip`; repo GitHub ikut di-rename
+  `dezzorigin/tiktok-downloader` -> `dezzorigin/simpanklip` (repo sempat
+  di-rename ke `dezzorigin/unduh-video` sebentar sebelum nama final diputuskan).
 
 
 ## [1.1.0] — 2026-11-19 — proper (PR #1)

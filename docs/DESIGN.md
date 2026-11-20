@@ -1,4 +1,4 @@
-# DESIGN.md — Kontrak Arah Desain Unduh Video
+# DESIGN.md — Kontrak Arah Desain Simpan Klip
 
 > Ditulis SEBELUM coding (standar anti-slop P1 §4). Referensi dipilih dulu,
 > palet dikunci dulu, baru bangun. Repo #34 — restructure kedua di program P1
@@ -6,7 +6,7 @@
 
 ## 1. Produk & pengguna
 
-Unduh Video — alat tempel-tautan untuk mengunduh video tanpa
+Simpan Klip — alat tempel-tautan untuk mengunduh video tanpa
 watermark, audio MP3, dan slide foto. Pengguna: siapa pun yang menyimpan
 klip video untuk ditonton offline / dipakai ulang — mereka butuh **tempel,
 klik, simpan**, bukan membaca brosur. Formulir unduh adalah produknya;
@@ -71,7 +71,7 @@ untuk bingkai ponsel), grid 8pt, padding kartu ≥ 16px.
 
 ## 6. Beda dari repo sebelumnya (#33 lokakos) — 5/5 sumbu
 
-| Sumbu | #33 lokakos | #34 unduh-video |
+| Sumbu | #33 lokakos | #34 simpanklip |
 |---|---|---|
 | Palet | Kertas Peta / Tinta Darussalam / Daun Kopelma / Kunyit / Bata / Abu Jalan (kertas terang) | Panggung Hitam / Layar Arang / Merah / Cyan / Kertas Putih / Abu Sinyal (panggung gelap) |
 | Tipografi | Fraunces (serif editorial) + Public Sans | Sora (geometris) + Figtree |

@@ -104,7 +104,7 @@ test('GET /api/status -> ok', async () => {
   assert.equal(res.status, 200);
   const body = await res.json();
   assert.equal(body.ok, true);
-  assert.equal(body.service, 'unduh-video');
+  assert.equal(body.service, 'simpanklip');
 });
 
 test('GET /api/demo video + photo membawa demo:true', async () => {
