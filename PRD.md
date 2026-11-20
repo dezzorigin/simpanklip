@@ -1,12 +1,12 @@
-# PRD — Unduh Video (v2.0)
+# PRD — Simpan Klip (v2.0)
 
 | Field | Nilai |
 |---|---|
-| Nama Proyek | Unduh Video |
+| Nama Proyek | Simpan Klip |
 | Tech Stack | Situs statis (HTML/CSS/JS tanpa framework) + Cloudflare Pages Worker (JavaScript, tanpa dependensi) |
 | Status | Proper (v1.1.0) — restructure + rebuild |
 | Penanggung Jawab | Nabil Aulia Dika |
-| Live Demo | https://unduh-video.pages.dev |
+| Live Demo | https://simpanklip.pages.dev |
 | Versi Dokumen | 2.0 |
 | Tanggal | 2026-11-19 |
 
@@ -98,7 +98,7 @@ Lihat [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) dan
 | savett.cc diblokir dari edge tertentu | Timeout 15 detik + pesan "coba lagi"; tidak ada retry buta |
 | Tautan privat/dihapus | Error "konten tidak ditemukan" (404), bukan crash |
 | Penyalahgunaan worker sebagai proxy | Hanya host video yang didukung yang diterima; URL dibatasi panjangnya |
-| Nama Pages diambil orang lain | Fallback berurutan: `tiktok-downloader` → `tiktokdownloader` → `unduh-tiktok` → `unduh-video` (rebrand 2026-11-20) |
+| Nama Pages diambil orang lain | Fallback berurutan: `tiktok-downloader` → `tiktokdownloader` → `unduh-tiktok` → `unduh-video` (subdomain `unduh-video.pages.dev` sudah dipakai akun Cloudflare lain — proyek di akun ini jadi `unduh-video-2gw.pages.dev`, 2026-11-20) → `simpanklip` (final, rebrand 2026-11-20) |
 
 ## 9. Kriteria Keberhasilan
 

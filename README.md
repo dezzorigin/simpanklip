@@ -1,10 +1,10 @@
-# Unduh Video
+# Simpan Klip
 
 Tempel tautan video, unduh videonya tanpa watermark, audionya sebagai MP3, atau slide fotonya. Gratis, tanpa akun, tanpa aplikasi.
 
 ## Live Demo
 
-**https://unduh-video.pages.dev**
+**https://simpanklip.pages.dev**
 
 ![Landing desktop](docs/screenshots/landing-desktop.png)
 

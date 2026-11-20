@@ -1,11 +1,11 @@
-# Deploy — Unduh Video
+# Deploy — Simpan Klip
 
 ## 1. Target
 
-Cloudflare Pages, proyek `unduh-video` → `https://unduh-video.pages.dev`.
+Cloudflare Pages, proyek `simpanklip` → `https://simpanklip.pages.dev`.
 
 Urutan nama (namespace global, baru ketahuan saat create): `tiktok-downloader`
-→ `tiktokdownloader` → `unduh-tiktok` → `unduh-video` (rebrand 2026-11-20, komplain merek). Nama final dicatat di CHANGELOG.
+→ `tiktokdownloader` → `unduh-tiktok` → `unduh-video` (subdomain sudah dipakai akun lain — proyek ini jadi `unduh-video-2gw.pages.dev`, 2026-11-20) → `simpanklip` (final, rebrand 2026-11-20, komplain merek). Nama final dicatat di CHANGELOG.
 
 ## 2. Cara deploy
 
@@ -14,8 +14,8 @@ Build lokal, lalu deploy folder `dist/` dengan helper API Pages:
 ```bash
 npm install
 npm run build   # dist/ berisi public/* + _worker.js
-python3 ~/workspace/github-actions/cf_pages.py create-project unduh-video
-python3 ~/workspace/github-actions/cf_pages.py deploy unduh-video dist
+python3 ~/workspace/github-actions/cf_pages.py create-project simpanklip
+python3 ~/workspace/github-actions/cf_pages.py deploy simpanklip dist
 ```
 
 `cf_pages.py` mengemas `dist/_worker.js` sebagai `_worker.bundle`
@@ -28,7 +28,7 @@ Tidak ada variabel env / secret yang perlu di-set di dashboard Pages.
 ## 3. Verifikasi live (wajib sebelum merge)
 
 ```bash
-BASE=https://unduh-video.pages.dev
+BASE=https://simpanklip.pages.dev
 curl -s -o /dev/null -w "%{http_code}\n" $BASE/                       # 200
 curl -s $BASE/api/status                                             # {"ok":true,...}
 curl -s "$BASE/api/demo?type=video" | head -c 200                    # demo:true

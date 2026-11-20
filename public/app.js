@@ -1,4 +1,4 @@
-// Unduh Video — frontend (vanilla JS, tanpa framework).
+// Simpan Klip — frontend (vanilla JS, tanpa framework).
 //
 // Alur: tempel tautan -> GET /api/download?url=... -> render hasil ke
 // pemutar (video 9:16 + rel aksi, atau slider foto).

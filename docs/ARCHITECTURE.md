@@ -1,4 +1,4 @@
-# Arsitektur — Unduh Video
+# Arsitektur — Simpan Klip
 
 ## 1. Gambaran
 
@@ -36,7 +36,7 @@ dist/             # hasil build (diabaikan git) — yang di-deploy
 
 | Endpoint | Metode | Respons |
 |---|---|---|
-| `/api/status` | GET | `{ok:true, service:"unduh-video", mode:"pages-worker", time}` |
+| `/api/status` | GET | `{ok:true, service:"simpanklip", mode:"pages-worker", time}` |
 | `/api/demo?type=video\|photo` | GET | Hasil contoh, selalu `demo:true` (media: MDN CC0 + Picsum) |
 | `/api/download?url=…` | GET | Hasil resolve (bentuk di bawah) atau `{error, code}` |
 | `/` dan aset lain | GET | Diserahkan ke binding `ASSETS` (file `dist/`) |

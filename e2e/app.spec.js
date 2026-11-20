@@ -10,10 +10,10 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('landing: navbar, hero, dan tautan GitHub hidup', async ({ page }) => {
-  await expect(page).toHaveTitle(/Unduh Video/);
+  await expect(page).toHaveTitle(/Simpan Klip/);
   await expect(page.locator('h1')).toHaveText('Simpan klip video favoritmu.');
   const gh = page.locator('.github-link');
-  await expect(gh).toHaveAttribute('href', 'https://github.com/dezzorigin/unduh-video');
+  await expect(gh).toHaveAttribute('href', 'https://github.com/dezzorigin/simpanklip');
   await expect(page.locator('#urlInput')).toBeVisible();
   await expect(page.locator('#dlBtn')).toBeVisible();
   await expect(page.locator('#cara-pakai')).toBeVisible();

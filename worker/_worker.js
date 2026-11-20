@@ -1,4 +1,4 @@
-// Unduh Video — Cloudflare Pages _worker.js (single-file, tanpa dependensi).
+// Simpan Klip — Cloudflare Pages _worker.js (single-file, tanpa dependensi).
 //
 // Menggantikan api/download.js era Vercel (axios + cheerio). Worker ini:
 //   - menyajikan situs statis lewat binding ASSETS (dist/ hasil build),
@@ -230,7 +230,7 @@ export const DEMO_VIDEO = {
   shares: '5.678',
   duration: '00:05',
   type: 'video',
-  poster: 'https://picsum.photos/seed/unduh-contoh-video/540/960',
+  poster: 'https://picsum.photos/seed/simpan-contoh-video/540/960',
   downloads: {
     nowm: ['https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4'],
     wm: [],
@@ -252,9 +252,9 @@ export const DEMO_PHOTO = {
   downloads: { nowm: [], wm: [] },
   mp3: [],
   slides: [
-    { index: 1, url: 'https://picsum.photos/seed/unduh-contoh-1/540/960' },
-    { index: 2, url: 'https://picsum.photos/seed/unduh-contoh-2/540/960' },
-    { index: 3, url: 'https://picsum.photos/seed/unduh-contoh-3/540/960' },
+    { index: 1, url: 'https://picsum.photos/seed/simpan-contoh-1/540/960' },
+    { index: 2, url: 'https://picsum.photos/seed/simpan-contoh-2/540/960' },
+    { index: 3, url: 'https://picsum.photos/seed/simpan-contoh-3/540/960' },
   ],
   source: 'demo',
 };
@@ -283,7 +283,7 @@ const handler = {
     }
 
     if (url.pathname === '/api/status') {
-      return json({ ok: true, service: 'unduh-video', mode: 'pages-worker', time: new Date().toISOString() });
+      return json({ ok: true, service: 'simpanklip', mode: 'pages-worker', time: new Date().toISOString() });
     }
 
     if (url.pathname === '/api/demo') {

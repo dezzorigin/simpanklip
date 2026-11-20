@@ -61,5 +61,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`unduh-video serve: http://127.0.0.1:${PORT}/`);
+  console.log(`simpanklip serve: http://127.0.0.1:${PORT}/`);
 });
