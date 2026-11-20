@@ -10,10 +10,10 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('landing: navbar, hero, dan tautan GitHub hidup', async ({ page }) => {
-  await expect(page).toHaveTitle(/TikTok Downloader/);
-  await expect(page.locator('h1')).toHaveText('Simpan klip TikTok favoritmu.');
+  await expect(page).toHaveTitle(/Unduh Video/);
+  await expect(page.locator('h1')).toHaveText('Simpan klip video favoritmu.');
   const gh = page.locator('.github-link');
-  await expect(gh).toHaveAttribute('href', 'https://github.com/dezzorigin/tiktok-downloader');
+  await expect(gh).toHaveAttribute('href', 'https://github.com/dezzorigin/unduh-video');
   await expect(page.locator('#urlInput')).toBeVisible();
   await expect(page.locator('#dlBtn')).toBeVisible();
   await expect(page.locator('#cara-pakai')).toBeVisible();
@@ -43,18 +43,18 @@ test('demo foto: slider jalan, counter berubah, tombol foto muncul', async ({ pa
   await expect(page.locator('#slideCounter')).toHaveText('1 / 3');
 });
 
-test('validasi: tautan kosong dan non-TikTok ditolak inline', async ({ page }) => {
+test('validasi: tautan kosong dan tautan yang tidak didukung ditolak inline', async ({ page }) => {
   await page.locator('#dlBtn').click();
   await expect(page.locator('#errorBox')).toBeVisible();
   await expect(page.locator('#errorBox')).toContainText('Tempel dulu');
 
   await page.locator('#urlInput').fill('https://www.youtube.com/watch?v=abc');
   await page.locator('#dlBtn').click();
-  await expect(page.locator('#errorBox')).toContainText('harus berasal dari TikTok');
+  await expect(page.locator('#errorBox')).toContainText('belum didukung');
 });
 
-test('validasi: tautan TikTok palsu menampilkan error server, bukan crash', async ({ page }) => {
-  // URL TikTok valid secara format, tapi resolver (savett) tidak bisa
+test('validasi: tautan video palsu menampilkan error server, bukan crash', async ({ page }) => {
+  // URL video valid secara format, tapi resolver (savett) tidak bisa
   // dijangkau dari VM — yang penting UI menampilkan error rapi.
   // Di CI (egress GitHub) hasilnya sama: error banner, halaman tetap hidup.
   await page.locator('#urlInput').fill('https://www.tiktok.com/@tiktok/video/1234567890123456789');

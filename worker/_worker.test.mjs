@@ -1,5 +1,5 @@
 // Unit test worker: node --test worker/_worker.test.mjs
-// Mencakup: validasi URL TikTok, parser HTML savett (fixture), alur resolve
+// Mencakup: validasi URL video, parser HTML savett (fixture), alur resolve
 // dengan fetch tiruan, endpoint /api/* lewat handler.fetch.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,24 +9,24 @@ import { fileURLToPath } from 'node:url';
 import handler, {
   DEMO_PHOTO,
   DEMO_VIDEO,
-  isTikTokUrl,
+  isSupportedVideoUrl,
   parseSavettHtml,
-  resolveTikTok,
+  resolveVideo,
 } from './_worker.js';
 
 const FIX = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const videoHtml = readFileSync(join(FIX, 'savett-video.html'), 'utf8');
 const photoHtml = readFileSync(join(FIX, 'savett-photo.html'), 'utf8');
 
-test('isTikTokUrl menerima host TikTok, menolak yang lain', () => {
-  assert.equal(isTikTokUrl('https://www.tiktok.com/@a/video/123'), true);
-  assert.equal(isTikTokUrl('https://vt.tiktok.com/ZS123/'), true);
-  assert.equal(isTikTokUrl('https://vm.tiktok.com/ZS123/'), true);
-  assert.equal(isTikTokUrl('https://www.youtube.com/watch?v=123'), false);
-  assert.equal(isTikTokUrl('https://tiktok.com.evil.example/x'), false);
-  assert.equal(isTikTokUrl('bukan-url'), false);
-  assert.equal(isTikTokUrl(''), false);
-  assert.equal(isTikTokUrl('x'.repeat(3000)), false);
+test('isSupportedVideoUrl menerima host video yang didukung, menolak yang lain', () => {
+  assert.equal(isSupportedVideoUrl('https://www.tiktok.com/@a/video/123'), true);
+  assert.equal(isSupportedVideoUrl('https://vt.tiktok.com/ZS123/'), true);
+  assert.equal(isSupportedVideoUrl('https://vm.tiktok.com/ZS123/'), true);
+  assert.equal(isSupportedVideoUrl('https://www.youtube.com/watch?v=123'), false);
+  assert.equal(isSupportedVideoUrl('https://tiktok.com.evil.example/x'), false);
+  assert.equal(isSupportedVideoUrl('bukan-url'), false);
+  assert.equal(isSupportedVideoUrl(''), false);
+  assert.equal(isSupportedVideoUrl('x'.repeat(3000)), false);
 });
 
 test('parseSavettHtml: video — username, statistik, durasi, tiga format', () => {
@@ -60,7 +60,7 @@ test('parseSavettHtml: halaman tanpa video-info -> NOT_FOUND', () => {
   assert.throws(() => parseSavettHtml('<html><body>kosong</body></html>'), (e) => e.code === 'NOT_FOUND');
 });
 
-test('resolveTikTok: alur GET csrf -> POST -> parse (fetch tiruan)', async () => {
+test('resolveVideo: alur GET csrf -> POST -> parse (fetch tiruan)', async () => {
   const calls = [];
   const fakeFetch = async (url, opts = {}) => {
     calls.push({ url, method: opts.method || 'GET' });
@@ -77,24 +77,24 @@ test('resolveTikTok: alur GET csrf -> POST -> parse (fetch tiruan)', async () =>
     assert.match(opts.headers.Cookie, /session=abc/);
     return { ok: true, text: async () => videoHtml };
   };
-  const d = await resolveTikTok('https://www.tiktok.com/@a/video/123', fakeFetch);
+  const d = await resolveVideo('https://www.tiktok.com/@a/video/123', fakeFetch);
   assert.equal(d.username, 'contoh_kreator');
   assert.equal(d.source, 'savett');
   assert.equal(calls.length, 2);
 });
 
-test('resolveTikTok: URL non-TikTok ditolak sebelum fetch', async () => {
+test('resolveVideo: URL yang tidak didukung ditolak sebelum fetch', async () => {
   let called = false;
   await assert.rejects(
-    resolveTikTok('https://example.com/x', async () => { called = true; }),
+    resolveVideo('https://example.com/x', async () => { called = true; }),
     (e) => e.code === 'BAD_URL',
   );
   assert.equal(called, false);
 });
 
-test('resolveTikTok: resolver mati -> RESOLVER_DOWN', async () => {
+test('resolveVideo: resolver mati -> RESOLVER_DOWN', async () => {
   await assert.rejects(
-    resolveTikTok('https://www.tiktok.com/@a/video/123', async () => { throw new Error('boom'); }),
+    resolveVideo('https://www.tiktok.com/@a/video/123', async () => { throw new Error('boom'); }),
     (e) => e.code === 'RESOLVER_DOWN',
   );
 });
@@ -104,7 +104,7 @@ test('GET /api/status -> ok', async () => {
   assert.equal(res.status, 200);
   const body = await res.json();
   assert.equal(body.ok, true);
-  assert.equal(body.service, 'tiktok-downloader');
+  assert.equal(body.service, 'unduh-video');
 });
 
 test('GET /api/demo video + photo membawa demo:true', async () => {
@@ -120,12 +120,12 @@ test('GET /api/demo video + photo membawa demo:true', async () => {
   assert.deepEqual(DEMO_PHOTO, p);
 });
 
-test('GET /api/download tanpa url -> 400; url non-TikTok -> 400', async () => {
+test('GET /api/download tanpa url -> 400; url tidak didukung -> 400', async () => {
   const a = await handler.fetch(new Request('https://x/api/download'), {});
   assert.equal(a.status, 400);
   const b = await handler.fetch(new Request('https://x/api/download?url=https://example.com/x'), {});
   assert.equal(b.status, 400);
-  assert.match((await b.json()).error, /TikTok/);
+  assert.match((await b.json()).error, /belum didukung/);
 });
 
 test('GET /api/download meneruskan hasil resolve (fetch asli di-stub via global)', async () => {

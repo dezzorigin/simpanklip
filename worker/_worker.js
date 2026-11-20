@@ -1,9 +1,9 @@
-// TikTok Downloader — Cloudflare Pages _worker.js (single-file, tanpa dependensi).
+// Unduh Video — Cloudflare Pages _worker.js (single-file, tanpa dependensi).
 //
 // Menggantikan api/download.js era Vercel (axios + cheerio). Worker ini:
 //   - menyajikan situs statis lewat binding ASSETS (dist/ hasil build),
 //   - GET  /api/status            -> kesehatan worker,
-//   - GET  /api/download?url=...  -> resolve tautan TikTok lewat savett.cc
+//   - GET  /api/download?url=...  -> resolve tautan video lewat savett.cc
 //        (GET halaman csrf -> POST tautan -> parse HTML hasil),
 //   - GET  /api/demo?type=video|photo -> hasil contoh berlabel demo:true.
 //
@@ -13,7 +13,7 @@
 // cheerio/axios tidak bisa jalan apa adanya di runtime Workers dan keduanya
 // dihapus dari dependensi (nol dependensi produksi).
 //
-// Batas penyalahgunaan: hanya host TikTok yang diterima (mencegah worker
+// Batas penyalahgunaan: hanya host platform video yang didukung yang diterima (mencegah worker
 // dipakai sebagai proxy terbuka), panjang URL dibatasi, timeout 15 detik.
 
 const SAVETT_ORIGIN = 'https://savett.cc';
@@ -28,7 +28,7 @@ const FETCH_HEADERS = {
     'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36',
 };
 
-const TIKTOK_HOSTS = new Set([
+const SUPPORTED_VIDEO_HOSTS = new Set([
   'tiktok.com',
   'www.tiktok.com',
   'm.tiktok.com',
@@ -36,7 +36,7 @@ const TIKTOK_HOSTS = new Set([
   'vm.tiktok.com',
 ]);
 
-export function isTikTokUrl(raw) {
+export function isSupportedVideoUrl(raw) {
   if (typeof raw !== 'string' || raw.length === 0 || raw.length > 2048) return false;
   let u;
   try {
@@ -45,7 +45,7 @@ export function isTikTokUrl(raw) {
     return false;
   }
   if (u.protocol !== 'https:' && u.protocol !== 'http:') return false;
-  return TIKTOK_HOSTS.has(u.hostname.toLowerCase());
+  return SUPPORTED_VIDEO_HOSTS.has(u.hostname.toLowerCase());
 }
 
 function decodeEntities(s) {
@@ -158,18 +158,18 @@ export function parseSavettHtml(html) {
   return data;
 }
 
-/** Resolve satu tautan TikTok lewat savett.cc. `fetcher` bisa di-inject (tes). */
-export async function resolveTikTok(url, fetcher = fetch) {
-  if (!isTikTokUrl(url)) {
-    const err = new Error('Tautan harus berasal dari TikTok (tiktok.com).');
+/** Resolve satu tautan video lewat savett.cc. `fetcher` bisa di-inject (tes). */
+export async function resolveVideo(url, fetcher = fetch) {
+  if (!isSupportedVideoUrl(url)) {
+    const err = new Error('Tautan video ini belum didukung.');
     err.code = 'BAD_URL';
     throw err;
   }
   const signal = AbortSignal.timeout(15000);
-  return resolveTikTokWithSession(url, fetcher, signal);
+  return resolveVideoWithSession(url, fetcher, signal);
 }
 
-async function resolveTikTokWithSession(url, fetcher, signal) {
+async function resolveVideoWithSession(url, fetcher, signal) {
   const getRes = await fetcher(SAVETT_PAGE, {
     headers: { 'User-Agent': FETCH_HEADERS['User-Agent'], Accept: FETCH_HEADERS.Accept },
     signal,
@@ -230,7 +230,7 @@ export const DEMO_VIDEO = {
   shares: '5.678',
   duration: '00:05',
   type: 'video',
-  poster: 'https://picsum.photos/seed/tiktok-contoh-video/540/960',
+  poster: 'https://picsum.photos/seed/unduh-contoh-video/540/960',
   downloads: {
     nowm: ['https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4'],
     wm: [],
@@ -252,9 +252,9 @@ export const DEMO_PHOTO = {
   downloads: { nowm: [], wm: [] },
   mp3: [],
   slides: [
-    { index: 1, url: 'https://picsum.photos/seed/tiktok-contoh-1/540/960' },
-    { index: 2, url: 'https://picsum.photos/seed/tiktok-contoh-2/540/960' },
-    { index: 3, url: 'https://picsum.photos/seed/tiktok-contoh-3/540/960' },
+    { index: 1, url: 'https://picsum.photos/seed/unduh-contoh-1/540/960' },
+    { index: 2, url: 'https://picsum.photos/seed/unduh-contoh-2/540/960' },
+    { index: 3, url: 'https://picsum.photos/seed/unduh-contoh-3/540/960' },
   ],
   source: 'demo',
 };
@@ -283,7 +283,7 @@ const handler = {
     }
 
     if (url.pathname === '/api/status') {
-      return json({ ok: true, service: 'tiktok-downloader', mode: 'pages-worker', time: new Date().toISOString() });
+      return json({ ok: true, service: 'unduh-video', mode: 'pages-worker', time: new Date().toISOString() });
     }
 
     if (url.pathname === '/api/demo') {
@@ -297,11 +297,11 @@ const handler = {
       }
       const target = url.searchParams.get('url') || '';
       if (!target) return json({ error: 'Parameter url wajib diisi.' }, 400);
-      if (!isTikTokUrl(target)) {
-        return json({ error: 'Tautan harus berasal dari TikTok (tiktok.com).' }, 400);
+      if (!isSupportedVideoUrl(target)) {
+        return json({ error: 'Tautan video ini belum didukung.' }, 400);
       }
       try {
-        const data = await resolveTikTok(target);
+        const data = await resolveVideo(target);
         return json(data);
       } catch (e) {
         const status = e.code === 'NOT_FOUND' ? 404 : e.code === 'BAD_URL' ? 400 : 502;

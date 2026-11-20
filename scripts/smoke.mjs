@@ -47,12 +47,12 @@ try {
   if (!ok) throw new Error('server tidak naik di :' + PORT);
 
   const checks = [
-    ['/', 200, 'TikTok Downloader'],
+    ['/', 200, 'Unduh Video'],
     ['/api/status', 200, '"ok":true'],
     ['/api/demo?type=video', 200, '"demo":true'],
     ['/api/demo?type=photo', 200, '"type":"photo"'],
     ['/api/download', 400, 'url wajib diisi'],
-    ['/api/download?url=https://example.com/x', 400, 'TikTok'],
+    ['/api/download?url=https://example.com/x', 400, 'belum didukung'],
     ['/favicon.svg', 200, '<svg'],
     ['/style.css', 200, '--merah'],
     ['/tidak-ada', 404, 'Not found'],

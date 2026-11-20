@@ -1,10 +1,10 @@
-# TikTok Downloader
+# Unduh Video
 
-Tempel tautan TikTok, unduh videonya tanpa watermark, audionya sebagai MP3, atau slide fotonya. Gratis, tanpa akun, tanpa aplikasi.
+Tempel tautan video, unduh videonya tanpa watermark, audionya sebagai MP3, atau slide fotonya. Gratis, tanpa akun, tanpa aplikasi.
 
 ## Live Demo
 
-**https://unduh-tiktok.pages.dev**
+**https://unduh-video.pages.dev**
 
 ![Landing desktop](docs/screenshots/landing-desktop.png)
 
@@ -12,15 +12,11 @@ Tempel tautan TikTok, unduh videonya tanpa watermark, audionya sebagai MP3, atau
 
 ![Landing mobile](docs/screenshots/landing-mobile.png)
 
-Hasil asli dari tautan TikTok nyata (play-test live):
-
-![Hasil asli live](docs/screenshots/live-hasil-asli.png)
-
 Video demo: [docs/demo/demo.mp4](docs/demo/demo.mp4)
 
 ## Fitur
 
-- **Video tanpa watermark** — MP4 kualitas asli, pratinjau di pemutar 9:16 dengan rel aksi ala TikTok.
+- **Video tanpa watermark** — MP4 kualitas asli, pratinjau di pemutar 9:16 dengan rel aksi.
 - **Audio MP3** — suara videonya saja, tombol muncul hanya bila tersedia.
 - **Slide foto** — slider geser + counter, unduh per foto atau semuanya sekaligus.
 - **Tempel dari clipboard** — satu klik, tanpa ketik manual.

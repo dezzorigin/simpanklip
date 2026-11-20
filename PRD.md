@@ -1,18 +1,18 @@
-# PRD — TikTok Downloader (v2.0)
+# PRD — Unduh Video (v2.0)
 
 | Field | Nilai |
 |---|---|
-| Nama Proyek | TikTok Downloader |
+| Nama Proyek | Unduh Video |
 | Tech Stack | Situs statis (HTML/CSS/JS tanpa framework) + Cloudflare Pages Worker (JavaScript, tanpa dependensi) |
 | Status | Proper (v1.1.0) — restructure + rebuild |
 | Penanggung Jawab | Nabil Aulia Dika |
-| Live Demo | https://unduh-tiktok.pages.dev (nama final dicatat di CHANGELOG setelah deploy) |
+| Live Demo | https://unduh-video.pages.dev |
 | Versi Dokumen | 2.0 |
 | Tanggal | 2026-11-19 |
 
 ## 1. Latar Belakang
 
-Download video TikTok tanpa watermark. App lama (2026) adalah halaman
+Download video tanpa watermark. App lama (2026) adalah halaman
 statis + Vercel Serverless Function (`api/download.js`, axios + cheerio)
 yang nyangkut di subfolder `tiktok-downloader--main` dan tidak bisa jalan
 dari root repo. Rebuild ini memindahkan app ke root, mengganti function
@@ -21,7 +21,7 @@ UI mengikuti standar anti-slop P1.
 
 ## 2. Tujuan
 
-- Tempel tautan TikTok → unduh video MP4 tanpa watermark, audio MP3, atau
+- Tempel tautan video → unduh video MP4 tanpa watermark, audio MP3, atau
   slide foto — tanpa akun, tanpa aplikasi, tanpa biaya.
 - Satu perintah build menghasilkan folder `dist/` yang siap deploy ke
   Cloudflare Pages (situs + worker).
@@ -30,20 +30,20 @@ UI mengikuti standar anti-slop P1.
 
 ## 3. Ruang Lingkup
 
-Masuk: form unduh (validasi URL TikTok client + server), resolver via
+Masuk: form unduh (validasi URL video di server), resolver via
 savett.cc, pratinjau video/foto, unduh paksa via blob (fallback tab baru),
 mode contoh (video + foto) berlabel jujur, landing ala SaaS (navbar +
 GitHub, hero split, cara pakai, fitur, FAQ, footer), docs lengkap, CI,
 deploy Pages.
 
 Tidak masuk: akun/pembayaran, riwayat unduhan server-side, unduh massal
-di luar slide foto, dukungan platform selain TikTok.
+di luar slide foto, dukungan platform video lain.
 
 ## 4. Fitur & Persyaratan Fungsional
 
 | ID | Fitur | Kriteria |
 |---|---|---|
-| F1 | Tempel tautan + Unduh | Input menerima tautan `tiktok.com`/`vt.tiktok.com`/`vm.tiktok.com`; tautan lain ditolak inline sebelum request |
+| F1 | Tempel tautan + Unduh | Input menerima tautan video dari host yang didukung (allowlist di worker); tautan lain ditolak server |
 | F2 | Pratinjau video | Video MP4 tanpa watermark tampil di pemutar 9:16 + rel aksi (suka/komentar/bagikan + angka tabular) |
 | F3 | Unduh video | Tombol utama mengunduh MP4 tanpa watermark; bila hanya ada versi watermark, tombol itu yang tampil + tombol cadangan |
 | F4 | Unduh audio | Tombol MP3 muncul hanya bila resolver mengembalikan URL audio |
@@ -57,7 +57,7 @@ di luar slide foto, dukungan platform selain TikTok.
 ## 5. Persyaratan Non-Fungsional
 
 - **Performa:** situs statis + worker edge; tanpa framework JS di client.
-- **Keamanan:** hanya host TikTok yang diterima (worker bukan proxy
+- **Keamanan:** hanya host video yang didukung yang diterima (worker bukan proxy
   terbuka); URL dibatasi 2048 karakter; timeout resolver 15 detik; rahasia
   (`.env`) tidak boleh ter-commit; nol dependensi produksi.
 - **Aksesibilitas:** label untuk semua kontrol, `role="alert"` untuk error,
@@ -97,13 +97,13 @@ Lihat [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) dan
 | savett.cc berubah format / mati | Parser gagal → error 404/502 yang jelas; mode contoh tetap jalan; fixture parser diuji unit |
 | savett.cc diblokir dari edge tertentu | Timeout 15 detik + pesan "coba lagi"; tidak ada retry buta |
 | Tautan privat/dihapus | Error "konten tidak ditemukan" (404), bukan crash |
-| Penyalahgunaan worker sebagai proxy | Hanya host TikTok yang diterima; URL dibatasi panjangnya |
-| Nama Pages diambil orang lain | Fallback berurutan: `tiktok-downloader` → `tiktokdownloader` → `unduh-tiktok` |
+| Penyalahgunaan worker sebagai proxy | Hanya host video yang didukung yang diterima; URL dibatasi panjangnya |
+| Nama Pages diambil orang lain | Fallback berurutan: `tiktok-downloader` → `tiktokdownloader` → `unduh-tiktok` → `unduh-video` (rebrand 2026-11-20) |
 
 ## 9. Kriteria Keberhasilan
 
 - `npm run build` menghasilkan `dist/` lengkap; CI hijau 6/6 job.
-- Play-test lokal + live: contoh video & foto jalan; tautan TikTok asli
+- Play-test lokal + live: contoh video & foto jalan; tautan video asli
   menghasilkan pratinjau + tombol unduh; error tampil inline.
 - Gate 7 sumbu anti-slop ≥ 4/5 tiap sumbu; tes siluet lolos.
 - Live di Cloudflare Pages (HTTP 200) + homepage repo terpasang.

@@ -1,4 +1,24 @@
-# CHANGELOG — TikTok Downloader
+# CHANGELOG — Unduh Video
+
+## [1.2.0] — 2026-11-20 — rebrand darurat (komplain merek dagang Cloudflare)
+
+Cloudflare Trust & Safety meminta penghapusan konten bermerek TikTok dari
+`unduh-tiktok.pages.dev` dalam 48 jam (tenggat 22 Nov 2026 05:23 WIB).
+Situs di-rebrand total menjadi "Unduh Video" dan pindah ke
+`https://unduh-video.pages.dev`; proyek Pages lama dihapus setelah
+verifikasi live.
+
+- Brand "TikTok Downloader" -> "Unduh Video" di semua copy pengguna
+  (title, hero, cara pakai, fitur, FAQ, footer, README, docs, OG tags)
+  + `og-image.png` digambar ulang tanpa nama/logo TikTok.
+- Validasi host pindah ke server saja (worker): frontend tidak lagi
+  menyimpan daftar host, supaya aset yang disajikan bebas nama platform.
+- Worker tetap hanya me-resolve tautan video dari host yang didukung
+  (allowlist server-side di `worker/_worker.js`); resolver savett.cc
+  tidak berubah. Fungsi unduh tetap jalan; batas ini dicatat jujur.
+- Nama baru: proyek Pages `unduh-video`; repo GitHub ikut di-rename
+  `dezzorigin/tiktok-downloader` -> `dezzorigin/unduh-video`.
+
 
 ## [1.1.0] — 2026-11-19 — proper (PR #1)
 
