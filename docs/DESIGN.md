@@ -1,4 +1,4 @@
-# DESIGN.md — Kontrak Arah Desain TikTok Downloader
+# DESIGN.md — Kontrak Arah Desain Unduh Video
 
 > Ditulis SEBELUM coding (standar anti-slop P1 §4). Referensi dipilih dulu,
 > palet dikunci dulu, baru bangun. Repo #34 — restructure kedua di program P1
@@ -6,9 +6,9 @@
 
 ## 1. Produk & pengguna
 
-TikTok Downloader — alat tempel-tautan untuk mengunduh video TikTok tanpa
+Unduh Video — alat tempel-tautan untuk mengunduh video tanpa
 watermark, audio MP3, dan slide foto. Pengguna: siapa pun yang menyimpan
-klip TikTok untuk ditonton offline / dipakai ulang — mereka butuh **tempel,
+klip video untuk ditonton offline / dipakai ulang — mereka butuh **tempel,
 klik, simpan**, bukan membaca brosur. Formulir unduh adalah produknya;
 landing adalah pembungkusnya.
 
@@ -23,9 +23,9 @@ landing adalah pembungkusnya.
 **Yang di-clone plek-ketiplek dari Copia:** hero split (alat kiri, jendela
 produk kanan), jendela produk sebagai mock yang benar-benar berfungsi
 (pratinjau hasil contoh, bukan gambar mati), fitur sebagai daftar berbaris,
-footer satu baris. **Yang diubah:** isinya alat unduh TikTok (bukan app Mac),
-palet hitam + merah/cyan TikTok (bukan netral Copia), bingkai produk
-berbentuk ponsel 9:16 dengan rel aksi vertikal ala TikTok, bahasa Indonesia,
+footer satu baris. **Yang diubah:** isinya alat unduh video (bukan app Mac),
+palet hitam + merah/cyan (bukan netral Copia), bingkai produk
+berbentuk ponsel 9:16 dengan rel aksi vertikal, bahasa Indonesia,
 data contoh dilabeli "contoh" dengan jujur.
 
 ## 3. Palet (6 warna bernama — tiap warna punya tugas)
@@ -34,13 +34,13 @@ data contoh dilabeli "contoh" dengan jujur.
 |---|---|---|
 | Panggung Hitam | `#0E0E10` | Background utama — panggung gelap, bukan slate/biru |
 | Layar Arang | `#17171A` | Permukaan kartu & kolom input — satu tingkat di atas panggung |
-| Merah TikTok | `#FE2C55` | CTA utama + sorot merek — warna resmi TikTok, dipakai hemat (tombol + aksen kecil saja) |
-| Cyan TikTok | `#25F4EE` | Aksen sekunder — pasangan resmi Merah TikTok; dipakai untuk rel aksi aktif & garis sorot pratinjau |
+| Merah | `#FE2C55` | CTA utama + sorot merek — warna aksen utama, dipakai hemat (tombol + aksen kecil saja) |
+| Cyan | `#25F4EE` | Aksen sekunder — pasangan Merah; dipakai untuk rel aksi aktif & garis sorot pratinjau |
 | Kertas Putih | `#F4F4F2` | Teks utama — putih hangat, bukan putih klinik |
 | Abu Sinyal | `#9A9AA3` | Teks sekunder, label, garis halus — kontras terhadap Panggung Hitam 7.0:1 (AA) |
 
 Catatan anti-klise: ini **bukan** near-black + lime asam (orde-kedua yang
-dilarang) — pasangan merah + cyan adalah warna merek TikTok sendiri, dan
+dilarang) — pasangan merah + cyan adalah warna aksen situs ini, dan
 merah dipakai hanya sebagai arti "aksi unduh", sama seperti cyan hanya
 sebagai arti "pratinjau aktif". Tidak ada gradient apa pun di halaman.
 
@@ -59,11 +59,11 @@ sebagai arti "pratinjau aktif". Tidak ada gradient apa pun di halaman.
 9:16 berisi pratinjau hasil di kanan; di bawahnya strip cara pakai
 horizontal lalu daftar fitur berbaris."
 
-**Detail khas (signature):** kartu hasil berbentuk **pemutar TikTok** —
+**Detail khas (signature):** kartu hasil berbentuk **pemutar video 9:16** —
 bingkai vertikal 9:16 dengan **rel aksi vertikal di sisi kanan** (hati,
-komentar, bagikan + angka tabular), persis rel aksi aplikasi TikTok; tombol
+komentar, bagikan + angka tabular), persis rel aksi aplikasi video; tombol
 unduh menempel di bawah bingkai seperti tombol aksi aplikasi. Sekali lihat
-thumbnail, ketahuan ini alat TikTok, bukan SaaS generik.
+thumbnail, ketahuan ini alat unduh video, bukan SaaS generik.
 
 **Geometri:** radius kartu 12px, kolom input 10px, tombol pil 999px hanya
 untuk CTA utama, bayangan satu tingkat tipis (`0 1px 0` + `0 12px 32px`
@@ -71,13 +71,13 @@ untuk bingkai ponsel), grid 8pt, padding kartu ≥ 16px.
 
 ## 6. Beda dari repo sebelumnya (#33 lokakos) — 5/5 sumbu
 
-| Sumbu | #33 lokakos | #34 tiktok-downloader |
+| Sumbu | #33 lokakos | #34 unduh-video |
 |---|---|---|
-| Palet | Kertas Peta / Tinta Darussalam / Daun Kopelma / Kunyit / Bata / Abu Jalan (kertas terang) | Panggung Hitam / Layar Arang / Merah TikTok / Cyan TikTok / Kertas Putih / Abu Sinyal (panggung gelap) |
+| Palet | Kertas Peta / Tinta Darussalam / Daun Kopelma / Kunyit / Bata / Abu Jalan (kertas terang) | Panggung Hitam / Layar Arang / Merah / Cyan / Kertas Putih / Abu Sinyal (panggung gelap) |
 | Tipografi | Fraunces (serif editorial) + Public Sans | Sora (geometris) + Figtree |
 | Layout | Split hero + peta hidup; app `/peta` panel kiri + peta | Hero split alat + bingkai ponsel 9:16; hasil sebagai pemutar vertikal |
 | Radius/spacing | Kartu 10px + pil karcis + tepi robek | Kartu 12px + pil CTA + bingkai ponsel |
-| Detail khas | Karcis harga kunyit + tepi robek papan pengumuman | Pemutar TikTok 9:16 + rel aksi vertikal |
+| Detail khas | Karcis harga kunyit + tepi robek papan pengumuman | Pemutar video 9:16 + rel aksi vertikal |
 
 ## 7. Larangan P0 — checklist sebelum merge
 
@@ -99,8 +99,8 @@ untuk bingkai ponsel), grid 8pt, padding kartu ≥ 16px.
    tombol unduh muncul hanya untuk format yang benar-benar dikembalikan API.
 2. **`alert()` sebagai satu-satunya umpan balik error** — diganti banner
    error inline + status loading di tombol.
-3. **Tanpa validasi URL** — tautan non-TikTok kini ditolak client + server
+3. **Tanpa validasi URL** — tautan yang tidak didukung kini ditolak server
    sebelum request ke resolver.
 4. **Tanpa mode demo** — tombol "Coba contoh" memuat hasil contoh berlabel
-   jujur, supaya alat bisa didemo tanpa tautan TikTok dan e2e deterministik.
+   jujur, supaya alat bisa didemo tanpa tautan video dan e2e deterministik.
 5. **FontAwesome CDN + font sistem** — diganti SVG inline + Sora/Figtree.

@@ -1,6 +1,6 @@
 name: CI
 
-# CI untuk TikTok Downloader (repo #34 — situs statis + Cloudflare Pages
+# CI untuk Unduh Video (repo #34 — situs statis + Cloudflare Pages
 # Worker tanpa dependensi produksi).
 # Job: build dist/ (public/* + worker/_worker.js), unit test worker
 # (node:test), pemeriksaan statis (tautan + secret + gate anti-slop P0),

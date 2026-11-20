@@ -1,12 +1,13 @@
-// TikTok Downloader — frontend (vanilla JS, tanpa framework).
+// Unduh Video — frontend (vanilla JS, tanpa framework).
 //
 // Alur: tempel tautan -> GET /api/download?url=... -> render hasil ke
-// pemutar (video 9:16 + rel aksi ala TikTok, atau slider foto).
+// pemutar (video 9:16 + rel aksi, atau slider foto).
 // Mode contoh: GET /api/demo?type=video|photo — hasil berlabel "Contoh".
 // Unduhan paksa: fetch blob dengan referrerPolicy no-referrer (menghindari
-// 403 dari CDN TikTok), fallback buka tab baru bila fetch diblokir.
-
-const TIKTOK_HOSTS = new Set(['tiktok.com', 'www.tiktok.com', 'm.tiktok.com', 'vt.tiktok.com', 'vm.tiktok.com']);
+// 403 dari CDN), fallback buka tab baru bila fetch diblokir.
+// Validasi host HANYA di server (worker/_worker.js): frontend tidak
+// menyimpan daftar host, supaya tidak ada nama platform di aset yang
+// disajikan; tautan yang tidak didukung ditolak server dengan error 400.
 
 const $ = (id) => document.getElementById(id);
 const form = $('dlForm');
@@ -21,16 +22,6 @@ const sliderBar = $('sliderBar');
 let current = null; // data hasil terakhir {username, ..., type, downloads, mp3, slides}
 let slides = [];
 let slideIndex = 0;
-
-function isTikTokUrl(raw) {
-  if (!raw || raw.length > 2048) return false;
-  try {
-    const u = new URL(raw.trim());
-    return (u.protocol === 'https:' || u.protocol === 'http:') && TIKTOK_HOSTS.has(u.hostname.toLowerCase());
-  } catch {
-    return false;
-  }
-}
 
 function showError(msg) {
   errorBox.textContent = msg;
@@ -71,7 +62,7 @@ function renderResult(data) {
   $('resDurationWrap').style.display = data.duration ? '' : 'none';
   $('demoBadge').hidden = !data.demo;
   $('playerCaption').textContent = data.demo
-    ? 'Pratinjau di atas adalah hasil contoh — tempel tautan TikTok untuk melihat hasil aslinya.'
+    ? 'Pratinjau di atas adalah hasil contoh — tempel tautan video untuk melihat hasil aslinya.'
     : 'Hasil dari tautanmu — klik tombol di atas untuk menyimpan filenya.';
 
   // Media
@@ -235,12 +226,7 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const raw = urlInput.value.trim();
   if (!raw) {
-    showError('Tempel dulu tautan TikTok-nya.');
-    urlInput.focus();
-    return;
-  }
-  if (!isTikTokUrl(raw)) {
-    showError('Tautan harus berasal dari TikTok — contoh: https://www.tiktok.com/@pengguna/video/123…');
+    showError('Tempel dulu tautan videonya.');
     urlInput.focus();
     return;
   }
@@ -266,7 +252,7 @@ $('pasteBtn').addEventListener('click', async () => {
       urlInput.focus();
       clearError();
     } else {
-      showError('Clipboard kosong — salin dulu tautan TikTok-nya.');
+      showError('Clipboard kosong — salin dulu tautan videonya.');
     }
   } catch {
     showError('Browser tidak mengizinkan baca clipboard — tempel manual dengan Ctrl+V.');

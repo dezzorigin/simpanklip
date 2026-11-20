@@ -1,10 +1,10 @@
-# Arsitektur — TikTok Downloader
+# Arsitektur — Unduh Video
 
 ## 1. Gambaran
 
 Situs statis + satu Cloudflare Pages Worker tanpa dependensi. Tidak ada
 framework frontend, tidak ada database, tidak ada secret. Satu-satunya
-pihak ketiga adalah **savett.cc** (resolver tautan TikTok → file media)
+pihak ketiga adalah **savett.cc** (resolver tautan video → file media)
 yang dipanggil server-side oleh worker.
 
 ```
@@ -36,7 +36,7 @@ dist/             # hasil build (diabaikan git) — yang di-deploy
 
 | Endpoint | Metode | Respons |
 |---|---|---|
-| `/api/status` | GET | `{ok:true, service:"tiktok-downloader", mode:"pages-worker", time}` |
+| `/api/status` | GET | `{ok:true, service:"unduh-video", mode:"pages-worker", time}` |
 | `/api/demo?type=video\|photo` | GET | Hasil contoh, selalu `demo:true` (media: MDN CC0 + Picsum) |
 | `/api/download?url=…` | GET | Hasil resolve (bentuk di bawah) atau `{error, code}` |
 | `/` dan aset lain | GET | Diserahkan ke binding `ASSETS` (file `dist/`) |
@@ -62,14 +62,14 @@ dist/             # hasil build (diabaikan git) — yang di-deploy
 | Kode | HTTP | Arti |
 |---|---|---|
 | (tanpa `url`) | 400 | Parameter `url` wajib diisi |
-| `BAD_URL` | 400 | Bukan tautan TikTok |
+| `BAD_URL` | 400 | Bukan tautan video yang didukung |
 | `NOT_FOUND` | 404 | Konten tidak ditemukan / sudah dihapus / privat |
 | `RESOLVER_DOWN` | 502 | savett.cc tidak dapat dihubungi |
 | `RESOLVER_CHANGED` | 502 | Format halaman resolver berubah (csrf tidak ketemu) |
 
 ## 4. Alur `/api/download`
 
-1. Validasi host: `tiktok.com`, `www.`, `m.`, `vt.`, `vm.` — selain itu
+1. Validasi host (di worker): `tiktok.com`, `www.`, `m.`, `vt.`, `vm.` — selain itu
    ditolak (worker bukan proxy terbuka). Panjang URL ≤ 2048.
 2. `GET https://savett.cc/en1/download` → ambil `csrf_token` + cookie sesi.
 3. `POST` ke URL yang sama dengan `csrf_token` + `url` (form-urlencoded).
@@ -90,10 +90,10 @@ dist/             # hasil build (diabaikan git) — yang di-deploy
 ## 5. Frontend
 
 - `app.js` — tanpa framework. State: `current` (hasil terakhir), `slides`,
-  `slideIndex`. Fungsi: `isTikTokUrl`, `renderResult`, `updateSlideUI`,
+  `slideIndex`. Fungsi: `isSupportedVideoUrl`, `renderResult`, `updateSlideUI`,
   `forceDownload`, `loadDemo`.
 - Unduh paksa: `fetch(url, {referrerPolicy:'no-referrer'})` → blob →
-  `<a download>`. `no-referrer` mencegah 403 CDN TikTok. Fallback:
+  `<a download>`. `no-referrer` mencegah 403 CDN. Fallback:
   `window.open(url)` bila fetch diblokir.
 - Pratinjau awal: `loadDemo('video')` saat halaman dibuka — hero langsung
   menunjukkan produk (bukan halaman kosong).
@@ -113,7 +113,7 @@ dist/             # hasil build (diabaikan git) — yang di-deploy
 
 ## 7. Keamanan
 
-- Allowlist host TikTok (server + client) — worker tidak bisa dipakai
+- Allowlist host video yang didukung (server saja) — worker tidak bisa dipakai
   sebagai proxy terbuka.
 - Batas panjang URL + timeout resolver.
 - CORS `*` hanya untuk GET (sama seperti API lama).
